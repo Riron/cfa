@@ -34,18 +34,18 @@ If you don't have Go installed on your machine you can download the executables.
 ### MacOSX
 
 ```
-curl -L https://github.com/riron/cfa/releases/download/0.0.1/cfa_darwin_amd64 > /usr/local/bin/cfa && chmod +x /usr/local/bin/cfa
+curl -L https://github.com/riron/cfa/releases/download/v0.0.1/cfa_darwin_amd64 > /usr/local/bin/cfa && chmod +x /usr/local/bin/cfa
 ```
 
 ### Linux
 
 ```
-curl -L https://github.com/riron/cfa/releases/download/0.0.1/cfa_linux_amd64 > /usr/local/bin/cfa && chmod +x /usr/local/bin/cfa
+curl -L https://github.com/riron/cfa/releases/download/v0.0.1/cfa_linux_amd64 > /usr/local/bin/cfa && chmod +x /usr/local/bin/cfa
 ```
 
 ### Windows
 
-Download [the executable](https://github.com/riron/cfa/releases/download/0.0.1/cfa_windows_amd64.exe), rename it to `cfa.exe` and add it to your path
+Download [the executable](https://github.com/riron/cfa/releases/download/v0.0.1/cfa_windows_amd64.exe), rename it to `cfa.exe` and add it to your path
 
 ## Usage
 
