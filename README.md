@@ -2,7 +2,7 @@
 
 Small utility to run `docker-compose` commands on your projects without having to `cd` into them.
 
-It is heavily inspired from [Captain](https://github.com/jenssegers/captain) but aims at being as transparent as possible by using the default `docker-compose` [CLI commands](https://docs.docker.com/compose/reference/) for all commands, so that all the commad you already use and know keep working out of the box.
+It is heavily inspired from [Captain](https://github.com/jenssegers/captain) but aims at being fully transparent by forwarding commands to the `docker-compose` [CLI](https://docs.docker.com/compose/reference/), so that all the commad you already use and know keep working out of the box.
 
 ```bash
 # Replace
@@ -17,7 +17,7 @@ $ cfa project1 down
 $ cfa project2 up -d
 ```
 
-**cfa** scan your directories looking for a `docker-compose.yml` file. Every folder meeting the condition are marked as candidate projects that you can operate on from anywhere.
+**cfa** scans your directories looking for a `docker-compose.yml` file. Every folder meeting the condition are marked as candidate projects that you can operate on from anywhere.
 
 Note that the project names are fuzzy searched. If several projects have a similar name, `cfa` will give you a list to chose from
 
