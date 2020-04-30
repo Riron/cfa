@@ -2,17 +2,17 @@ name: Create artifact
 on: [push]
 
 jobs:
-    build:
+  build:
     name: Create executable
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-go@v2
-          with:
-            go-version: '^1.13.1'
-        - run: go get github.com/mitchellh/gox
-        - run: make
-        - uses: actions/upload-artifact@v2
-          with:
-            name: cfa-executables
-            path: bin
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.13.1'
+      - run: go get github.com/mitchellh/gox
+      - run: make
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cfa-executables
+          path: bin
