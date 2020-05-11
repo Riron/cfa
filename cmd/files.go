@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/fatih/color"
 )
 
 func projects() []Project {
@@ -87,8 +89,9 @@ func printList(pattern string) {
 		ps = matches
 	}
 
-	fmt.Printf("%d projects found:\n", len(ps))
+	fmt.Printf("%d project(s) found:\n", len(ps))
+	cyan := color.New(color.FgCyan).SprintFunc()
 	for _, project := range ps {
-		fmt.Printf("- %s (%s)\n", project.Name, blue(project.Path+"\\docker-compose.yml"))
+		fmt.Fprintf(color.Output,"* %s (%s)\n", project.Name, cyan(project.Path+"\\docker-compose.yml"))
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
+	"github.com/fatih/color"
 )
 
 var config Config
@@ -57,7 +58,8 @@ and run your compose command on it.`,
 			os.Exit(1)
 		}
 
-		fmt.Printf("Using project %s...\n", blue(project.Name))
+		cyan := color.New(color.FgCyan).SprintFunc()
+		fmt.Fprintf(color.Output,"Using project %s...\n", cyan(project.Name))
 
 		if devEnv {
 			composeEnv = "dev"

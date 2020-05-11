@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/fatih/color"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -40,12 +41,13 @@ func search(pattern string) (Project, error) {
 	}
 
 	if len(matches) > 1 {
-		fmt.Println("The following folders are candidates, please select one of:")
+		fmt.Println("The following projects are candidates:")
+		cyan := color.New(color.FgCyan).SprintFunc()
 		for idx, match := range matches {
-			fmt.Printf("%d. %s (%s)\n", idx+1, match.Name, blue(match.Path))
+			fmt.Fprintf(color.Output, "%d. %s (%s)\n", idx+1, match.Name, cyan(match.Path))
 		}
 
-		fmt.Println("Which item do you want to use ?")
+		fmt.Println("Which one do you want to use ?")
 		var choice int
 		n, err := fmt.Scanf("%d\n", &choice)
 
