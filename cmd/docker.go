@@ -14,7 +14,7 @@ func composeCommand(project Project, devEnv string, args []string) error {
 }
 
 func stopContainers() error {
-	return run(".", "docker stop $(docker ps -aq)")
+	return run(".", "sh", "-c", "docker stop $(docker ps -aq)")
 }
 
 func run(dir string, command string, args ...string) error {
