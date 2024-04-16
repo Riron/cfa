@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -34,7 +34,7 @@ func scan(wg *sync.WaitGroup, folder string, depth int, results chan Project) {
 	defer wg.Done()
 
 	// Get all files and subdirectories in this directory.
-	files, _ := ioutil.ReadDir(folder)
+	files, _ := os.ReadDir(folder)
 	var directories []string
 
 	for _, file := range files {
@@ -43,13 +43,17 @@ func scan(wg *sync.WaitGroup, folder string, depth int, results chan Project) {
 		// Add subdirectories to list of yet to be scanned directories.
 		if file.IsDir() {
 			// Check if folder is in blacklist.
+			isBlackListed := false
 			for _, blacklist := range config.Blacklist {
-				if blacklist == path {
+				if blacklist == path || strings.Contains(path, blacklist) {
+					isBlackListed = true
 					continue
 				}
 			}
 
-			directories = append(directories, path)
+			if !isBlackListed {
+				directories = append(directories, path)
+			}
 			continue
 		}
 
@@ -72,8 +76,6 @@ func scan(wg *sync.WaitGroup, folder string, depth int, results chan Project) {
 			go scan(wg, folder, depth-1, results)
 		}
 	}
-
-	return
 }
 
 func printList(pattern string) {
@@ -92,6 +94,6 @@ func printList(pattern string) {
 	fmt.Printf("%d project(s) found:\n", len(ps))
 	cyan := color.New(color.FgCyan).SprintFunc()
 	for _, project := range ps {
-		fmt.Fprintf(color.Output,"* %s (%s)\n", project.Name, cyan(project.Path+"\\docker-compose.yml"))
+		fmt.Fprintf(color.Output, "* %s (%s)\n", project.Name, cyan(project.Path+"/docker-compose.yml"))
 	}
 }

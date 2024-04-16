@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/fatih/color"
+	"github.com/manifoldco/promptui"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -22,7 +22,7 @@ func match(projects []Project, pattern string) ([]Project, error) {
 	matches := fuzzy.Find(pattern, list)
 
 	if matches.Len() == 0 {
-		return []Project{}, errors.New("No match found")
+		return []Project{}, errors.New("no match found")
 	}
 
 	filteredProjects := make([]Project, 0, len(matches))
@@ -41,25 +41,23 @@ func search(pattern string) (Project, error) {
 	}
 
 	if len(matches) > 1 {
-		fmt.Println("The following projects are candidates:")
 		cyan := color.New(color.FgCyan).SprintFunc()
+		items := make([]string, len(matches))
 		for idx, match := range matches {
-			fmt.Fprintf(color.Output, "%d. %s (%s)\n", idx+1, match.Name, cyan(match.Path))
+			items[idx] = match.Name + " " + cyan(match.Path)
+		}
+		prompt := promptui.Select{
+			Label: "The following projects are candidates",
+			Items: items,
 		}
 
-		fmt.Println("Which one do you want to use ?")
-		var choice int
-		n, err := fmt.Scanf("%d\n", &choice)
+		choice, _, err := prompt.Run()
 
-		if err != nil || n != 1 {
-			return Project{}, errors.New("Invalid choice selected")
+		if err != nil {
+			return Project{}, errors.New("invalid choice selected")
 		}
 
-		if choice <= len(matches) && choice > 0 {
-			return matches[choice-1], nil
-		}
-
-		return Project{}, errors.New("This is not an acceptable choice")
+		return matches[choice], nil
 	}
 
 	return matches[0], nil

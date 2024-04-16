@@ -5,12 +5,13 @@ import (
 	"os/exec"
 )
 
-func composeCommand(project Project, devEnv string, args []string) error {
-	if devEnv != "" {
-		args = append([]string{"-f", "docker-compose." + devEnv + ".yml"}, args...)
+func composeCommand(project Project, composeSuffix string, args []string) error {
+	if composeSuffix != "" {
+		args = append([]string{"-f", "docker-compose." + composeSuffix + ".yml"}, args...)
 	}
 
-	return run(project.Path, "docker-compose", args...)
+	args = append([]string{"compose"}, args...)
+	return run(project.Path, "docker", args...)
 }
 
 func stopContainers() error {

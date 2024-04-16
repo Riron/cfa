@@ -6,13 +6,12 @@ import (
 	"os/user"
 	"strconv"
 
-	"github.com/spf13/cobra"
 	"github.com/fatih/color"
+	"github.com/spf13/cobra"
 )
 
 var config Config
-var composeEnv string
-var devEnv bool
+var composeSuffix string
 var list bool
 var stop bool
 var find string
@@ -23,7 +22,7 @@ var rootCmd = &cobra.Command{
 cfa -u=dev my_project exec my_container sh
 cfa -f=my_pro
 cfa -s`,
-	Short: "Docker-compose from anywhere",
+	Short: "docker compose from anywhere",
 	Long: `Manage your compose projects from anywhere
 
 cfa allows you to use the same compose CLI you already know
@@ -59,13 +58,9 @@ and run your compose command on it.`,
 		}
 
 		cyan := color.New(color.FgCyan).SprintFunc()
-		fmt.Fprintf(color.Output,"Using project %s...\n", cyan(project.Name))
+		fmt.Fprintf(color.Output, "Using project %s...\n", cyan(project.Name))
 
-		if devEnv {
-			composeEnv = "dev"
-		}
-
-		composeCommand(project, composeEnv, args[1:])
+		composeCommand(project, composeSuffix, args[1:])
 	},
 }
 
@@ -74,8 +69,7 @@ func init() {
 
 	rootCmd.Flags().BoolVarP(&list, "list", "l", false, "List all available projects")
 	rootCmd.Flags().BoolVarP(&stop, "stop", "s", false, "Stop all running containers")
-	rootCmd.Flags().StringVarP(&composeEnv, "suffix", "u", "", "Use a suffixed compose file (ex: -s=dev will use the docker-compose.dev.yml file)")
-	rootCmd.Flags().BoolVarP(&devEnv, "dev", "D", false, "Shorthand for -u=dev")
+	rootCmd.Flags().StringVarP(&composeSuffix, "suffix", "u", "", "Use a suffixed compose file (ex: -u=dev will use the docker-compose.dev.yml file)")
 	rootCmd.Flags().StringVarP(&find, "find", "f", "", "List projects corresponding to search")
 	rootCmd.Flags().SetInterspersed(false)
 }
@@ -84,9 +78,21 @@ func initConfig() {
 	usr, _ := user.Current()
 
 	config = Config{
-		Blacklist: []string{usr.HomeDir + "/Library", usr.HomeDir + "/Applications"},
-		Root:      usr.HomeDir,
-		Depth:     5,
+		Blacklist: []string{
+			usr.HomeDir + "/Library",
+			usr.HomeDir + "/Applications",
+			"/node_modules",
+			"/vendor",
+			"/target",
+			".cache",
+			".git",
+			".github",
+			".idea",
+			".vscode",
+			".terraform",
+		},
+		Root:  usr.HomeDir,
+		Depth: 7,
 	}
 
 	depth, ok := os.LookupEnv("CFA_DEPTH")
